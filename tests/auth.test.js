@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import sinon from 'sinon';
+import bcrypt from 'bcrypt';
 import User from '../models/User';
 import app from '../server';
 
@@ -88,8 +89,41 @@ describe('Authentication', () => {
     });
 
     it('should not login a user with incorrect credentials', (done) => {
+      const password = 'test1234';
+      const hashedPassword = bcrypt.hashSync(password, 10);
+      const email = 'testuser@example.com';
 
+      userFindStub.resolves({
+        id: 'testId',
+        email,
+        password: 'wrongPassword',
+      });
+
+      chai
+        .request(app)
+        .post('/api/auth/login')
+        .send({ email, password })
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('error').eql('Invalid Password');
+          done();
+        });
     });
-  })
 
+    it('should not login a user that does not exist', (done) => {
+      const password = 'test1234';
+      const email = 'testuser@example.com';
+      userFindStub.resolves(null);
+
+      chai
+        .request(app)
+        .post('/api/auth/login')
+        .send({ email, password })
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('error').eql('User not found');
+          done();
+        });
+    });
+  });
 });
