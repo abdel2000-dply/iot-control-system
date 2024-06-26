@@ -107,6 +107,49 @@ class DeviceController {
     }
   }
 
+  static async updateDevice(req, res) {
+    // PUT - Update a device by ID
+    const { deviceId } = req.params;
+    const userId = req.user.id;
+    const { deviceName, deviceType, settings } = req.body;
+
+    try {
+      const device = await Device.findOne({ _id: deviceId, userId });
+      if (!device) {
+        return res.status(404).json({ error: 'Device not found' });
+      }
+
+      if (deviceName) device.deviceName = deviceName;
+      if (deviceType) device.deviceType = deviceType;
+      if (settings) device.settings = settings;
+
+      await device.save();
+
+      return res.status(200).json(device);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+  static async deleteDevice(req, res) {
+    // DELETE - Delete a device by ID
+    const { deviceId } = req.params;
+    const userId = req.user.id;
+
+    try {
+      const device = await Device.findOneAndDelete({ _id: deviceId, userId });
+      if (!device) {
+        return res.status(404).json({ error: 'Device not found' });
+      }
+
+      return res.status(204).send();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
 }
 
 export default DeviceController;
