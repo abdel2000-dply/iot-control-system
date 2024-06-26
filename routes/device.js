@@ -11,7 +11,7 @@ deviceRoutes.post('/', auth, DeviceController.newDevice);
 deviceRoutes.get('/:deviceId', auth, DeviceController.getDeviceById);
 
 // GET - List all devices of that user
-deviceRoutes.get('', auth, DeviceController.listAllDevices);
+deviceRoutes.get('/', auth, DeviceController.listAllDevices);
 
 // GET - Get status of a device by ID
 deviceRoutes.get('/:deviceId/status', auth, DeviceController.getDeviceStatus);
