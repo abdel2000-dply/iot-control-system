@@ -19,7 +19,10 @@ deviceRoutes.get('/:deviceId/status', auth, DeviceController.getDeviceStatus);
 // PUT - turn a device ON/OFF
 deviceRoutes.put('/:deviceId/toggle', auth, DeviceController.toggleDeviceState);
 
-// PUT - Update a device by ID ==> Add this
-// DELETE - Delete a device by ID ==> Add this
+// PUT - Update a device by ID
+deviceRoutes.put('/:deviceId', auth, DeviceController.updateDevice);
+
+// DELETE - Delete a device by ID
+deviceRoutes.delete('/:deviceId', auth, DeviceController.deleteDevice);
 
 export default deviceRoutes;
