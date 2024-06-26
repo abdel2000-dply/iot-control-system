@@ -7,24 +7,36 @@ const DeviceSchema = new mongoose.Schema({
     required: true,
   },
   deviceName: {
-    type: String,
+    type: String, // e.g. "Living Room Light"
     required: true,
   },
   deviceType: {
-    type: String,
+    type: String, // e.g. "light", "sensor", "thermostat"
     required: true,
   },
   isActive: {
     type: Boolean,
-    default: false,
+    default: false, // to turn a device ON/OFF (true/false)
+  },
+  status: {
+    type: String,
+    default: 'offline', // "online", "offline", "maintenance", "error"
+    // can be set dynamically based on communication with the device
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  lastseen: {
+  lastSeen: {
     type: Date,
     default: Date.now,
+  },
+  settings: {
+    type: Object,
+    default: {},
+  // This will be used to store device specific settings
+  // e.g. temperature, humidity, etc.
+  // and it will have a meaning based on the deviceType
   },
 });
 
