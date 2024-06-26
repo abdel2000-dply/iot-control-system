@@ -1,12 +1,18 @@
 import express from 'express';
 import AuthController from '../controllers/AuthController';
 
-const router = express.Router();
+const authRoutes = express.Router();
 
 // Register a new user
-router.post('/register', AuthController.Register);
+authRoutes.post('/register', AuthController.Register);
 
 // Log in a user
-router.post('/login', AuthController.Login);
+authRoutes.post('/login', AuthController.Login);
 
-export default router;
+// Log out a user ==> Add this
+// Refresh token ==> Add this
+
+// Forgot password ==> Add this  (not important for now)
+// Reset password ==> Add this  (not important for now)
+
+export default authRoutes;
