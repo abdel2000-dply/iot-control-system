@@ -44,7 +44,7 @@ describe('Authentication', () => {
     });
 
     it('should not register an exiting user', (done) => {
-      userFindStub.resolves({ id: 'testId', email: 'testuser@example.com' });
+      userFindStub.resolves({ _id: 'testId', email: 'testuser@example.com' });
 
       const newUser = {
         username: 'testuser',
@@ -72,7 +72,7 @@ describe('Authentication', () => {
       const email = 'testuser@example.com';
 
       userFindStub.resolves({
-        id: 'testId',
+        _id: 'testId',
         email,
         password: hashedPassword,
       });
@@ -84,6 +84,7 @@ describe('Authentication', () => {
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.have.property('token');
+          expect(res.body).to.have.property('refreshToken');
           done();
         });
     });
@@ -94,7 +95,7 @@ describe('Authentication', () => {
       const email = 'testuser@example.com';
 
       userFindStub.resolves({
-        id: 'testId',
+        _id: 'testId',
         email,
         password: 'wrongPassword',
       });
