@@ -19,8 +19,6 @@ class DeviceController {
         deviceName,
         deviceType,
       });
-      await newDevice.save();
-
       return res.status(201).json(newDevice);
     } catch (error) {
       console.error(error);
