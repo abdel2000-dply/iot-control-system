@@ -1,5 +1,6 @@
 import express from 'express';
 import AuthController from '../controllers/AuthController';
+import auth from '../middleware/auth';
 
 const authRoutes = express.Router();
 
@@ -10,9 +11,9 @@ authRoutes.post('/register', AuthController.Register);
 authRoutes.post('/login', AuthController.Login);
 
 // Log out a user ==> Add this
-// Refresh token ==> Add this
+authRoutes.post('/logout', auth, AuthController.Logout);
 
-// Forgot password ==> Add this  (not important for now)
-// Reset password ==> Add this  (not important for now)
+// Refresh token ==> Add this
+authRoutes.post('/refresh-token', AuthController.Refresh);
 
 export default authRoutes;
