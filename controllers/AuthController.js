@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import User from '../models/User';
-// import redisClient from '../utils/redis';
+import redisClient from '../utils/redis';
 
 dotenv.config();
 
@@ -61,16 +61,59 @@ class AuthController {
       if (!validPassword) {
         return res.status(400).json({ error: 'Invalid Password' })
       }
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const payload = { userId: user._id };
+      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '5d' });
 
-      // we can Store the token in Redis
-      // to keep a Revocation list of tokens, other future uses
-      // await redisClient.set(`auth_${user._id}`, token, 3600);
+      await redisClient.set(user._id.toString(), refreshToken, 5 * 24 * 60 * 60);
 
-      return res.json({ token });
+      return res.json({ token, refreshToken });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+
+  // Log out a user
+  static async Logout(req, res) {
+    const userId = req.user.id;
+
+    try {
+      await redisClient.del(userId.toString());
+      return res.status(204).end();
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+
+  // Refresh token
+  static async Refresh (req, res) {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ error: 'Missing refresh token' });
+    }
+
+    try {
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+      const storedToken = await redisClient.get(decoded.userId.toString());
+
+      if (refreshToken !== storedToken) {
+        return res.status(401).json({ error: 'Invalid refresh token' });
+      }
+
+      const user = await User.findOne({ _id: decoded.userId });
+      if (!user) {
+        return res.status(400).json({ error: 'User not found' });
+      }
+
+      const payload = { userId: user._id };
+      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+      // we also can update the refresh token here for security reasons
+      return res.json({ token });
+    } catch (error) {
+      return res.status(401).json({ error: 'Invalid refresh token' });
     }
   }
 }
