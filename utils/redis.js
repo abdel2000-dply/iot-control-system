@@ -1,9 +1,9 @@
-import { createClient } from 'redis';
+import redis from 'redis';
 import { promisify } from 'util';
 
 class RedisClient {
   constructor() {
-    this.client = createClient();
+    this.client = redis.createClient();
     this.isConnected = true;
     this.client.on('error', (error) => {
       console.error(error);
