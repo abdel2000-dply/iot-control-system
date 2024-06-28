@@ -25,4 +25,7 @@ deviceRoutes.put('/:deviceId', auth, DeviceController.updateDevice);
 // DELETE - Delete a device by ID
 deviceRoutes.delete('/:deviceId', auth, DeviceController.deleteDevice);
 
+// POST - Send a command to a device
+deviceRoutes.post('/:deviceId/command', auth, DeviceController.sendCommand);
+
 export default deviceRoutes;
