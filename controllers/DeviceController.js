@@ -148,6 +148,20 @@ class DeviceController {
     }
   }
 
+  static async sendCommand(req, res) {
+    // POST - Send a command to a device
+    const { deviceId } = req.params;
+    const userId = req.user.id;
+    const { command } = req.body;
+
+    try {
+      // This is where you would send the command to the device
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
 }
 
 export default DeviceController;
