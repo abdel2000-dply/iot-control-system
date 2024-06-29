@@ -3,7 +3,7 @@ import chaiHttp from 'chai-http';
 import sinon from 'sinon';
 import bcrypt from 'bcrypt';
 import User from '../models/User';
-import app from '../server';
+import { app } from '../server';
 
 chai.use(chaiHttp);
 const { expect } = chai;
