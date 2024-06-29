@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import sinon from 'sinon';
 import jwt from 'jsonwebtoken';
-import app from '../server';
+import { app } from '../server';
 import Device from '../models/Device';
 
 chai.use(chaiHttp);
