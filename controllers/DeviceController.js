@@ -154,8 +154,24 @@ class DeviceController {
     const userId = req.user.id;
     const { command } = req.body;
 
+    if (!command) {
+      return res.status(400).json({ error: 'Missing command' });
+    }
+
     try {
       // This is where you would send the command to the device
+      const device = await Device.findOne({ _id: deviceId, userId });
+      if (!device) {
+        return res.status(404).json({ error: 'Device not found' });
+      }
+
+      device.settings = { ...device.settings, ...command };
+      await device.save();
+
+      // send the command via websockets ...
+      io.to(deviceId).emit('command', { command });
+
+      return res.status(200).json(device);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: error.message });
