@@ -1,4 +1,5 @@
 import Device from '../models/Device';
+import { io } from '../server';
 
 class DeviceController {
   static async newDevice(req, res) {
