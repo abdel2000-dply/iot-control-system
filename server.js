@@ -7,6 +7,7 @@ import { Server } from 'socket.io';
 import authRoutes from './routes/auth';
 import deviceRoutes from './routes/device';
 import { handleWebSocketConnection } from './websocket';
+import swagger from './utils/swagger';
 
 dotenv.config();
 
@@ -29,6 +30,8 @@ mongoose
   .then(() => console.log('MongoDB connected'))
   .catch((error) => console.log('MongoDB connection error:', error));
 
+swagger(app);
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -42,4 +45,4 @@ server.listen(PORT, () => {
   console.log('Server is running on port', PORT);
 });
 
-export { app, server };
+export { app, server, io };
