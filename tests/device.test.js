@@ -233,4 +233,37 @@ describe('Device Management', () => {
         });
     });
   });
+
+  describe('POST /api/devices/:deviceId/command', () => {
+    it('should send a command to a device', (done) => {
+      deviceFindOneStub.resolves({
+        _id: 'deviceId',
+        userId: 'testUserId',
+        deviceName: 'testDevice',
+        deviceType: 'thermostat',
+        isActive: false,
+        createdAt: new Date(),
+        lastSeen: new Date(),
+        status: 'offline',
+        settings: {},
+        save: deviceSaveStub
+      });
+
+      const command = {
+        temperature: 25
+      };
+
+      chai
+        .request(app)
+        .post('/api/devices/deviceId/command')
+        .set('Authorization', 'Bearer validToken')
+        .send({ command })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.property('settings');
+          done();
+        });
+    });
+  });
 });
