@@ -108,7 +108,7 @@ authRoutes.post('/logout', auth, AuthController.Logout);
  *     responses:
  *       200:
  *         description: Token refreshed successfully
- *       400:
+ *       401:
  *         description: Missing or invalid refresh token
  */
 authRoutes.post('/refresh-token', AuthController.Refresh);
