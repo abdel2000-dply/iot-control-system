@@ -35,7 +35,7 @@ class AuthController {
       
       await newUser.save();
 
-      return res.json({ id: newUser._id, email: newUser.email });
+      return res.status(201).json({ id: newUser._id, email: newUser.email });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message: 'Internal server error' });
