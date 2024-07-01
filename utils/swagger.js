@@ -6,18 +6,27 @@ const swaggerDefinition = {
   info: {
     title: 'IoT Control System API',
     version: '1.0.0',
-    description: 'API for controlling IoT devices'
+    description: 'API for controlling IoT devices',
   },
   servers: [
     {
-      url: 'http://localhost:5000'
-    }
-  ]
+      url: 'http://localhost:5000',
+    },
+  ],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+    },
+  },
 };
 
 const options = {
   swaggerDefinition,
-  apis: ['./routes/*.js']
+  apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
