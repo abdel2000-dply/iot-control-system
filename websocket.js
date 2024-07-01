@@ -14,7 +14,7 @@ const handleWebSocketConnection = (socket) => {
       device.lastSeen = Date.now();
       device.status = 'online';
       // handle the recived data
-
+      console.log('Data received:', deviceData); // for now just log the data
       socket.emit('ack', 'Data received');
     } catch (error) {
       console.error(error);
