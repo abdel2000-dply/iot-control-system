@@ -34,7 +34,9 @@ const authRoutes = express.Router();
  *       201:
  *         description: User registered successfully
  *       400:
- *         description: Missing required fields or user already exists
+ *         description: Missing required fields
+ *       409:
+ *        description: User already exists
  */
 authRoutes.post('/register', AuthController.Register);
 
@@ -78,7 +80,7 @@ authRoutes.post('/login', AuthController.Login);
  *     security:
  *       - bearerAuth: []
  *     responses:
- *       200:
+ *       204:
  *         description: User logged out successfully
  *       401:
  *         description: Unauthorized
