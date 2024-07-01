@@ -36,7 +36,7 @@ describe('Authentication', () => {
         .post('/api/auth/register')
         .send(newUser)
         .end((err, res) => {
-          expect(res).to.have.status(200);
+          expect(res).to.have.status(201);
           expect(res.body).to.have.property('id');
           expect(res.body).to.have.property('email').eql('testuser@example.com');
           done();
