@@ -1,4 +1,7 @@
 import winston from 'winston';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const logger = winston.createLogger({
   level: 'info', // Log only if info or higher( warn, error)
@@ -9,7 +12,6 @@ const logger = winston.createLogger({
     })
   ),
   transports: [
-    new winston.transports.Console(),
     new winston.transports.File({ filename:'logs/error.log', level:'error' }),
     new winston.transports.File({ filename:'logs/combined.log' })
   ],
