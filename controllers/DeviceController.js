@@ -78,6 +78,7 @@ class DeviceController {
     try {
       const device = await Device.findOne({ _id: deviceId, userId });
       if (!device) {
+        logger.error('Device not found');
         return res.status(404).json({ error: 'Device not found' });
       }
 
@@ -86,9 +87,10 @@ class DeviceController {
 
       await device.save();
 
+      logger.info('Device state toggled successfully');
       return res.status(200).json(device);
     } catch (error) {
-      console.error(error);
+      logger.error(error.message);
       return res.status(500).json({ error: error.message });
     }
   }
