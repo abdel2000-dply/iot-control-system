@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import User from '../models/User';
 import redisClient from '../utils/redis';
+import logger from '../utils/logger';
 
 dotenv.config();
 
@@ -11,12 +12,15 @@ class AuthController {
   static async Register(req, res) {
     const { username, email, password } = req.body;
     if (!username) {
+      logger.error('Missing username');
       return res.status(400).json({ error: 'Missing username' });
     }
     if (!email) {
+      logger.error('Missing email');
       return res.status(400).json({ error: 'Missing email' });
     }
     if (!password) {
+      logger.error('Missing password');
       return res.status(400).json({ error: 'Missing password' });
     }
 
@@ -24,6 +28,7 @@ class AuthController {
       // Check if the user already exists
       const user = await User.findOne({ email });
       if (user) {
+        logger.error(`User already exists: ${email}`)
         return res.status(409).json({ error: 'User already exists' });
       }
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -35,9 +40,10 @@ class AuthController {
       
       await newUser.save();
 
+      logger.info(`User registered: ${email}`);
       return res.status(201).json({ id: newUser._id, email: newUser.email });
     } catch (error) {
-      console.log(error);
+      logger.error(`User registration error: ${error.message}`);
       return res.status(500).json({ message: 'Internal server error' });
     }
   }
