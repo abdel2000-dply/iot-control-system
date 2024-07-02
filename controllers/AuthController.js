@@ -52,19 +52,23 @@ class AuthController {
   static async Login(req, res) {
     const { email, password } = req.body;
     if (!email) {
+      logger.error('Missing email');
       return res.status(400).json({ error: 'Missing email' });
     }
     if (!password) {
+      logger.error('Missing password');
       return res.status(400).json({ error: 'Missing password' });
     }
 
     try {
       const user = await User.findOne({ email });
       if (!user) {
+        logger.error(`User not found: ${email}`);
         return res.status(400).json({ error: 'User not found' });
       }
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
+        logger.error(`Invalid password: ${email}`);
         return res.status(400).json({ error: 'Invalid Password' })
       }
       const payload = { userId: user._id };
@@ -73,9 +77,10 @@ class AuthController {
 
       await redisClient.set(user._id.toString(), refreshToken, 5 * 24 * 60 * 60);
 
+      logger.info(`User logged in: ${email}`);
       return res.json({ token, refreshToken });
     } catch (error) {
-      console.log(error);
+      logger.error(`User login error: ${error.message}`);
       return res.status(500).json({ message: 'Internal server error' });
     }
   }
