@@ -58,7 +58,7 @@ class DeviceController {
     try {
       const devices = await Device.find({ userId });
       if (!devices) {
-        logger.error('No devices found');
+        logger.error(`No devices found for user: ${userId}`);
         return res.status(404).json({ error: 'No devices found' });
       }
 
