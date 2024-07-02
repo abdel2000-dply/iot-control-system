@@ -72,6 +72,8 @@ deviceRoutes.get('/:deviceId', auth, DeviceController.getDeviceById);
  *     responses:
  *       200:
  *         description: List of devices retrieved successfully
+ *      404:
+ *        description: No devices found
  */
 deviceRoutes.get('/', auth, DeviceController.listAllDevices);
 
