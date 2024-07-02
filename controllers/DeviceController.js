@@ -87,7 +87,7 @@ class DeviceController {
 
       await device.save();
 
-      logger.info('Device state toggled successfully');
+      logger.info(`Device state toggled: ${deviceId}`);
       return res.status(200).json(device);
     } catch (error) {
       logger.error(`Error toggling device state: ${error.message}`);
