@@ -62,7 +62,7 @@ class DeviceController {
         return res.status(404).json({ error: 'No devices found' });
       }
 
-      logger.info('Devices retrieved successfully');
+      logger.info(`Devices retrieved successfully for user: ${userId}`);
       return res.status(200).json(devices);
     } catch (error) {
       logger.error(`Error listing devices: ${error.message}`);
