@@ -156,12 +156,14 @@ class DeviceController {
     try {
       const device = await Device.findOneAndDelete({ _id: deviceId, userId });
       if (!device) {
+        logger.error(`Device not found: ${deviceId}`);
         return res.status(404).json({ error: 'Device not found' });
       }
 
+      logger.info(`Device deleted: ${deviceId}`);
       return res.status(204).send();
     } catch (error) {
-      console.error(error);
+      logger.error(`Error deleting device: ${error.message}`);
       return res.status(500).json({ error: error.message });
     }
   }
