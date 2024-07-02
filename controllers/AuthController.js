@@ -103,6 +103,7 @@ class AuthController {
   static async Refresh (req, res) {
     const { refreshToken } = req.body;
     if (!refreshToken) {
+      logger.error('Missing refresh token');
       return res.status(400).json({ error: 'Missing refresh token' });
     }
 
@@ -111,11 +112,13 @@ class AuthController {
       const storedToken = await redisClient.get(decoded.userId.toString());
 
       if (refreshToken !== storedToken) {
+        logger.error('Invalid refresh token');
         return res.status(401).json({ error: 'Invalid refresh token' });
       }
 
       const user = await User.findOne({ _id: decoded.userId });
       if (!user) {
+        logger.error(`User not found: ${decoded.userId}`)
         return res.status(400).json({ error: 'User not found' });
       }
 
@@ -123,6 +126,7 @@ class AuthController {
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
       // we also can update the refresh token here for security reasons
+      logger.info(`Token refreshed: ${user.email}`);
       return res.json({ token });
     } catch (error) {
       return res.status(401).json({ error: 'Invalid refresh token' });
