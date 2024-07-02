@@ -91,9 +91,10 @@ class AuthController {
 
     try {
       await redisClient.del(userId.toString());
+      logger.info(`User logged out: ${userId}`);
       return res.status(204).end();
     } catch (error) {
-      console.log(error);
+      logger.error(`User logout error: ${error.message}`);
       return res.status(500).json({ message: 'Internal server error' });
     }
   }
