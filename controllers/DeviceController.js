@@ -1,5 +1,6 @@
 import Device from '../models/Device';
 import { io } from '../server';
+import logger from '../utils/logger';
 
 class DeviceController {
   static async newDevice(req, res) {
@@ -8,9 +9,11 @@ class DeviceController {
     const userId = req.user.id;
 
     if (!deviceName) {
+      logger.error('Missing device name');
       return res.status(400).json({ error: 'Missing device name' });
     }
     if (!deviceType) {
+      logger.error('Missing device type');
       return res.status(400).json({ error: 'Missing device type' });
     }
 
@@ -22,7 +25,7 @@ class DeviceController {
       });
       return res.status(201).json(newDevice);
     } catch (error) {
-      console.error(error);
+      logger.error(error.message);
       return res.status(500).json({ error: error.message });
     }
     
