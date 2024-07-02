@@ -113,10 +113,10 @@ class DeviceController {
         lastSeen: device.lastSeen,
       };
 
-      logger.info('Device status retrieved successfully');
+      logger.info(`Device status retrieved: ${deviceId}`);
       return res.status(200).json(response);
     } catch (error) {
-      console.error(error);
+      logger.error(`Error retrieving device status: ${error.message}`);
       return res.status(500).json({ error: error.message });
     }
   }
