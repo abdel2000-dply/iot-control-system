@@ -26,7 +26,7 @@ class DeviceController {
       logger.info('Device created successfully with id: ', newDevice._id);
       return res.status(201).json(newDevice);
     } catch (error) {
-      logger.error(error.message);
+      logger.error(`Device creation error: ${error.message}`);
       return res.status(500).json({ error: error.message });
     }
   }
