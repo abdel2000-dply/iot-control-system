@@ -13,6 +13,12 @@ const handleWebSocketConnection = (socket) => {
         return socket.emit('deviceError', { error: 'Device not found' });
       }
 
+      // Check if the device is active
+      // if (!device.isActive) {
+      //   logger.error(`Device is not active: ${deviceId}`);
+      //   return socket.emit('deviceError', { error: 'Device is not active' });
+      // }
+
       device.lastSeen = Date.now();
       device.status = 'online';
       // handle the recived data
