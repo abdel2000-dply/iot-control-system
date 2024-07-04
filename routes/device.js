@@ -30,7 +30,18 @@ const deviceRoutes = express.Router();
  *                 required: true
  *     responses:
  *       201:
- *         description: Device created successfully
+ *         description: Device created successfully, including a token for device use.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 newDevice:
+ *                   type: object
+ *                   description: The newly created device
+ *                 token:
+ *                   type: string
+ *                   description: Token for the device to connect to the websocket server
  *       400:
  *         description: Missing device name or type
  */
