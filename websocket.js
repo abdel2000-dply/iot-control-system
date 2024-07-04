@@ -83,4 +83,13 @@ const handleWebSocketConnection = (socket) => {
   });
 };
 
+function validateToken(token) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return { userId: decoded.userId, deviceId: decoded.deviceId };
+  } catch (error) {
+    return null;
+  }
+}
+
 export { handleWebSocketConnection };
