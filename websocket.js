@@ -1,4 +1,5 @@
 import Device from './models/Device';
+import DeviceData from './models/DeviceData';
 import logger from './utils/logger';
 
 const handleWebSocketConnection = (socket) => {
@@ -7,6 +8,13 @@ const handleWebSocketConnection = (socket) => {
   socket.on('deviceData', async (data) => {
     try {
       const { deviceId, userId, deviceData } = data;
+      /*
+        - this is send by the device
+        - will the decice send the userId?
+        - if not, how do we know which user is sending the data?
+        - will the device send the deviceId?
+        - if not, how do we know which device is sending the data?
+      */
       const device = await Device.findOne({ _id: deviceId, userId });
       if (!device) {
         logger.error(`Device not found: ${deviceId}`);
@@ -21,12 +29,19 @@ const handleWebSocketConnection = (socket) => {
 
       device.lastSeen = Date.now();
       device.status = 'online';
+
       // handle the recived data
-      logger.info(`Data received: ${deviceData}`); // for now just log the data
+      const newData = new DeviceData({
+        deviceId,
+        userId,
+        data: deviceData,
+      });
+      logger.info(`Data received: ${JSON.stringify(deviceData)}`);
 
       await device.save();
+      await newData.save();
 
-      logger.info(`Data received from device: ${deviceId}`)
+      logger.info(`Data received from device: ${deviceId}`) // edit the logging message
       socket.emit('ack', 'Data received');
     } catch (error) {
       logger.error(`Error receiving data: ${error.message}`);
