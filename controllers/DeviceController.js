@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import Device from '../models/Device';
 import { io } from '../server';
 import logger from '../utils/logger';
@@ -23,8 +24,12 @@ class DeviceController {
         deviceName,
         deviceType,
       });
+      // token for the device
+      const token = jwt.sign({ userId, deviceId: newDevice._id }, process.env.JWT_SECRET);
+      // for now, no expiration time for the token
+      // use the token to configure the device to connect to the websocket server
       logger.info('Device created successfully with id: ', newDevice._id);
-      return res.status(201).json(newDevice);
+      return res.status(201).json({ newDevice, token });
     } catch (error) {
       logger.error(`Device creation error: ${error.message}`);
       return res.status(500).json({ error: error.message });
