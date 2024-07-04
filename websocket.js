@@ -1,10 +1,9 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import Device from './models/Device';
 import DeviceData from './models/DeviceData';
 import logger from './utils/logger';
 
-dotenv.config();
+// dotenv.config(); // This line is not needed here ??
 
 const handleWebSocketConnection = (socket) => {
   logger.info(`New connection: ${socket.id}`);
