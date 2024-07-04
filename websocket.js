@@ -39,15 +39,14 @@ const handleWebSocketConnection = (socket) => {
 
   socket.on('deviceData', async (data) => {
     try {
-      const { deviceId, userId, deviceData } = data;
-      /*
-        - this is send by the device
-        - will the decice send the userId?
-        - if not, how do we know which user is sending the data?
-        - will the device send the deviceId?
-        - if not, how do we know which device is sending the data?
-        ===== this would be solved by the added authentication for the device
-      */
+      const { deviceId, userId } = socket;
+      if (!deviceId || !userId) {
+        logger.error('Device not authenticated');
+        return socket.emit('deviceError', { error: 'Device not authenticated' });
+      }
+
+      const { deviceData } = data;
+
       const device = await Device.findOne({ _id: deviceId, userId });
       if (!device) {
         logger.error(`Device not found: ${deviceId}`);
@@ -69,12 +68,13 @@ const handleWebSocketConnection = (socket) => {
         userId,
         data: deviceData,
       });
+
       logger.info(`Data received: ${JSON.stringify(deviceData)}`);
 
       await device.save();
       await newData.save();
 
-      logger.info(`Data received from device: ${deviceId}`) // edit the logging message
+      logger.info(`Data received from device: ${deviceId}`)
       socket.emit('ack', 'Data received');
     } catch (error) {
       logger.error(`Error receiving data: ${error.message}`);
