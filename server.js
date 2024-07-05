@@ -6,6 +6,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import authRoutes from './routes/auth';
 import deviceRoutes from './routes/device';
+import dataRoutes from './routes/devicedata';
 import { handleWebSocketConnection } from './websocket';
 import swagger from './utils/swagger';
 
@@ -18,7 +19,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/auth/', authRoutes);
-app.use('/api/devices', deviceRoutes); 
+app.use('/api/devices', deviceRoutes);
+app.use('/api/deviceData', dataRoutes); 
 
 // Connect to MongoDB
 mongoose
