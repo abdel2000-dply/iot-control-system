@@ -26,7 +26,7 @@ class DeviceController {
       // token for the device to authenticate with the websocket server
       const token = `${userId}.${newDevice._id}`;
       // use the token to configure the device to connect to the websocket server
-      logger.info('Device created successfully with id: ', newDevice._id);
+      logger.info('Device created successfully with id: ', newDevice._id, ' Device token: ', token);
       return res.status(201).json({ newDevice, token });
     } catch (error) {
       logger.error(`Device creation error: ${error.message}`);
