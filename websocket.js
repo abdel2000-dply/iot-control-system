@@ -1,9 +1,20 @@
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import Device from './models/Device';
 import DeviceData from './models/DeviceData';
 import logger from './utils/logger';
 
-// dotenv.config(); // This line is not needed here ??
+dotenv.config();
+
+function validateToken(token) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return { userId: decoded.userId, deviceId: decoded.deviceId };
+  } catch (error) {
+    return { userId: null, deviceId: null };
+  }
+}
+////////////////////////////////////////////////////////////////////////// lets use jwt.io to decode the token
 
 const handleWebSocketConnection = (socket) => {
   logger.info(`New connection: ${socket.id}`);
@@ -23,8 +34,8 @@ const handleWebSocketConnection = (socket) => {
       }
 
       // save the deviceid and userId in the socket for future use
-      socket.deviceId = deviceId;
       socket.userId = userId;
+      socket.deviceId = deviceId;
 
       // save the socket id in the device ???
 
@@ -38,7 +49,7 @@ const handleWebSocketConnection = (socket) => {
 
   socket.on('deviceData', async (data) => {
     try {
-      const { deviceId, userId } = socket;
+      const { userId, deviceId } = socket;
       if (!deviceId || !userId) {
         logger.error('Device not authenticated');
         return socket.emit('deviceError', { error: 'Device not authenticated' });
@@ -82,13 +93,5 @@ const handleWebSocketConnection = (socket) => {
   });
 };
 
-function validateToken(token) {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return { userId: decoded.userId, deviceId: decoded.deviceId };
-  } catch (error) {
-    return null;
-  }
-}
 
 export { handleWebSocketConnection };
