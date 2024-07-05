@@ -6,7 +6,7 @@ const dataRoutes = express.Router();
 
 /**
  * @swagger
- * /api/deviceData/{deviceId}:
+ * /api/devicedata/{deviceId}:
  *   get:
  *     summary: Get device data
  *     description: Retrieve data for a specific device within a date range. If `startDate` is not provided, defaults to 1 hour ago. If `endDate` is not provided, defaults to the current time.
