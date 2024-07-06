@@ -54,7 +54,28 @@ describe('WebSocket Server', function () {
       });
     });
 
-    
+    it('should send error for invalid token', (done) => {
+      const invalidToken = 'invalid-tokenformat';
+
+      clientSocket.emit('authenticate', invalidToken);
+
+      clientSocket.on('authError', (message) => {
+        expect(message.error).to.equal('Invalid token');
+        done();
+      });
+    });
+
+    it('should send error if device not found', (done) => {
+      const token = '60f7f5e49b1e8d3a58f6b2d3.60f7f5f49b1e8d3a58f6b2d4';
+      findOneStub.resolves(null);
+
+      clientSocket.emit('authenticate', token);
+
+      clientSocket.on('authError', (message) => {
+        expect(message.error).to.equal('Device not found');
+        done();
+      });
+    });
   });
 
   describe('Device Data', () => {
