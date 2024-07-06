@@ -50,5 +50,26 @@ describe('DataController', () => {
         });
     });
 
+    it('should use default time range when startDate and endDate are not provided', (done) => {
+      const mockData = [
+        { timestamp: new Date(), data: { temperature: 25 } },
+        { timestamp: new Date(), data: { temperature: 26 } }
+      ];
+      findStub.returns({
+        sort: sinon.stub().returns(Promise.resolve(mockData))
+      });
+
+      chai
+        .request(app)
+        .get('/api/deviceData/60f7f5f49b1e8d3a58f6b2d4')
+        .set('Authorization', 'Bearer validToken')
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('array');
+          expect(res.body).to.have.lengthOf(2);
+          done();
+        });
+    });
+
     
 });
