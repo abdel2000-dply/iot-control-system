@@ -107,7 +107,7 @@ http://localhost:5000/ws-docs
 
 Devices can connect and send data using WebSockets. The provided `sendFakeData.js` script demonstrates how to simulate sending data from a device using Node.js. You can find this script in the project directory.
 
-**Running Tests:**
+### Running Tests
 
 To ensure everything's working smoothly, you can run the automated tests using:
 
@@ -115,9 +115,9 @@ To ensure everything's working smoothly, you can run the automated tests using:
 npm test
 ```
 
-**Logging:**
+### Logging
 
 This project uses Winston for logging. Logs are saved in the `logs` directory. You can configure
 
-**Contributing:**
+### Contributing
 Contributions are welcome! Please open an issue or submit a pull request with your changes.
