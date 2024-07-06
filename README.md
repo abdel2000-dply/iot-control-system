@@ -118,3 +118,6 @@ npm test
 **Logging:**
 
 This project uses Winston for logging. Logs are saved in the `logs` directory. You can configure
+
+**Contributing:**
+Contributions are welcome! Please open an issue or submit a pull request with your changes.
