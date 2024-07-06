@@ -89,5 +89,22 @@ describe('DataController', () => {
         });
     });
 
-    
+    it('should handle server errors', (done) => {
+      findStub.returns({
+        sort: sinon.stub().throws(new Error('Internal server error'))
+      });
+
+      chai
+        .request(app)
+        .get('/api/deviceData/60f7f5f49b1e8d3a58f6b2d4')
+        .set('Authorization', 'Bearer validToken')
+        .end((err, res) => {
+          expect(res).to.have.status(500);
+          expect(res.body)
+            .to.have.property('error')
+            .eql('Internal server error');
+          done();
+        });
+    });
+  });
 });
