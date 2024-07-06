@@ -40,9 +40,9 @@ export default (app) => {
       endpoints: [
         {
           event: 'authenticate',
-          description: 'Authenticate a device with a JWT token',
+          description: 'Authenticate a device with a token',
           payload: {
-            token: 'JWT token provided during device registration',
+            token: 'Token provided during device registration',
           },
           response: {
             authenticated: { message: 'Authenticated successfully' },
@@ -53,7 +53,7 @@ export default (app) => {
           event: 'deviceData',
           description: 'Send data from a device',
           payload: {
-            deviceData: { temperature: 22 },
+            deviceData: { temperature: 22, humidity: 50},
           },
           response: {
             ack: 'Data received',
