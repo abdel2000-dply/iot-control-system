@@ -62,7 +62,8 @@ describe('Device Management', () => {
         .send(newDevice)
         .end((err, res) => {
           expect(res).to.have.status(201);
-          expect(res.body).to.have.property('deviceName').eql('testDevice');
+          expect(res.body).to.have.property('token');
+          expect(res.body).to.have.property('newDevice').to.have.property('deviceName').eql('testDevice');
           done();
         });
     });
