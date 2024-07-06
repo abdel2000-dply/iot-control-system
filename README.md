@@ -65,7 +65,7 @@ http://localhost:5000/api-docs
 http://localhost:5000/ws-docs
 ```
 
-### How to use the API (Examples)
+### How to use the API
 
 **Authentication:**
 
