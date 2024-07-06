@@ -1,24 +1,12 @@
 import { expect } from 'chai';
+import sinon from 'sinon';
 import io from 'socket.io-client';
 import { server } from '../server';
 import Device from '../models/Device';
 import DeviceData from '../models/DeviceData';
-import mongoose from 'mongoose';
-import sinon from 'sinon';
 
 describe('WebSocket Server', function () {
   let clientSocket, saveDataStub, findOneStub, saveDeviceStub;
-
-  // before((done) => {
-  //   mongoose
-  //     .connect(process.env.DB_URI, {
-  //       useNewUrlParser: true,
-  //       useUnifiedTopology: true,
-  //       useCreateIndex: true
-  //     })
-  //     .then(() => done())
-  //     .catch((error) => done(error));
-  // });
 
   beforeEach((done) => {
     clientSocket = io.connect(`http://localhost:${process.env.PORT || 5000}`, {
@@ -43,14 +31,13 @@ describe('WebSocket Server', function () {
     done();
   });
 
-  // after((done) => {
-  //   mongoose.connection.close(() => {
-  //     server.close(() => done());
-  //   });
-  // });
+  after((done) => {
+    server.close(done);
+  });
 
   describe('Device Authentication', () => {
     it('should authenticate device with valid token', (done) => {
+      const token = '60f7f5e49b1e8d3a58f6b2d3.60f7f5f49b1e8d3a58f6b2d4';
       findOneStub.resolves({
         _id: '60f7f5f49b1e8d3a58f6b2d4',
         userId: '60f7f5e49b1e8d3a58f6b2d3',
@@ -59,20 +46,21 @@ describe('WebSocket Server', function () {
         save: saveDeviceStub
       });
 
-      clientSocket.emit('authenticate', {
-        token: 'validToken',
-      });
+      clientSocket.emit('authenticate', token);
 
       clientSocket.on('authenticated', (message) => {
-        expect(message).to.equal('Authenticated successfully');
+        expect(message.message).to.equal('Authenticated successfully');
         done();
       });
     });
+
+    
   });
 
   describe('Device Data', () => {
-    it('should acknowledge received data from device', (done) => {
-      sinon.stub(Device, 'findOne').resolves({
+    it('should acknowledge received data from authenticated device', (done) => {
+      const token = '60f7f5e49b1e8d3a58f6b2d3.60f7f5f49b1e8d3a58f6b2d4';
+      findOneStub.resolves({
         _id: '60f7f5f49b1e8d3a58f6b2d4',
         userId: '60f7f5e49b1e8d3a58f6b2d3',
         lastSeen: new Date(),
@@ -80,25 +68,27 @@ describe('WebSocket Server', function () {
         save: saveDeviceStub
       });
 
-      clientSocket.emit('deviceData', {
-        deviceData: { temperature: 22 }
-      });
+      clientSocket.emit('authenticate', token);
 
-      clientSocket.on('ack', (message) => {
-        expect(message).to.equal('Data received');
-        done();
+      clientSocket.on('authenticated', () => {
+        clientSocket.emit('deviceData', {
+          deviceData: { temperature: 22 }
+        });
+
+        clientSocket.on('ack', (message) => {
+          expect(message).to.equal('Data received');
+          done();
+        });
       });
     });
 
-    it('should send error if device not found', (done) => {
-      findOneStub.resolves(null);
-
+    it('should send error if device not authenticated', (done) => {
       clientSocket.emit('deviceData', {
         deviceData: { temperature: 22 }
       });
 
       clientSocket.on('deviceError', (message) => {
-        expect(message.error).to.equal('Device not found');
+        expect(message.error).to.equal('Device not authenticated');
         done();
       });
     });
