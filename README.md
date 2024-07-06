@@ -1,4 +1,4 @@
-## IoT Device Control and Data Management API (.md)
+## IoT Device Control and Data Management API
 This project provides an API for managing your Internet of Things (IoT) devices. Think of it as a central hub that lets you control and monitor various devices like lights, thermostats, or sensors, all from one place.
 
 ### What can you do with this API?
