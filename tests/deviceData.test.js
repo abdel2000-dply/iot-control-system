@@ -8,7 +8,7 @@ import DeviceData from '../models/DeviceData';
 chai.use(chaiHttp);
 const { expect } = chai;
 
-describe('DataController', () => {
+describe('Data Control', () => {
   let findStub, jwtStub;
 
   beforeEach(() => {
