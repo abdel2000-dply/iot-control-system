@@ -71,5 +71,23 @@ describe('DataController', () => {
         });
     });
 
+    it('should return 404 if no data is found', (done) => {
+      findStub.returns({
+        sort: sinon.stub().returns(Promise.resolve([]))
+      });
+
+      chai
+        .request(app)
+        .get('/api/deviceData/60f7f5f49b1e8d3a58f6b2d4')
+        .set('Authorization', 'Bearer validToken')
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body)
+            .to.have.property('error')
+            .eql('No data found for this device in the specified time range');
+          done();
+        });
+    });
+
     
 });
