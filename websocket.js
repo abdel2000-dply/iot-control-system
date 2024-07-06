@@ -1,27 +1,13 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import Device from './models/Device';
 import DeviceData from './models/DeviceData';
 import logger from './utils/logger';
-
-dotenv.config();
-
-function validateToken(token) {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return { userId: decoded.userId, deviceId: decoded.deviceId };
-  } catch (error) {
-    return { userId: null, deviceId: null };
-  }
-}
-////////////////////////////////////////////////////////////////////////// lets use jwt.io to decode the token
 
 const handleWebSocketConnection = (socket) => {
   logger.info(`New connection: ${socket.id}`);
 
   socket.on('authenticate', async (token) => {
     try {
-      const { userId, deviceId } = validateToken(token);
+      const [userId, deviceId] = token.split('.');
       if (!userId || !deviceId) {
         logger.error('Invalid token');
         return socket.emit('authError', { error: 'Invalid token' });
@@ -63,7 +49,7 @@ const handleWebSocketConnection = (socket) => {
         return socket.emit('deviceError', { error: 'Device not found' });
       }
 
-      // Check if the device is active
+      // Check if the device is active, this will require for the user to activate the device first to receive data
       // if (!device.isActive) {
       //   logger.error(`Device is not active: ${deviceId}`);
       //   return socket.emit('deviceError', { error: 'Device is not active' });
@@ -79,12 +65,11 @@ const handleWebSocketConnection = (socket) => {
         data: deviceData,
       });
 
-      logger.info(`Data received: ${JSON.stringify(deviceData)}`);
-
+      
       await device.save();
       await newData.save();
-
-      logger.info(`Data received from device: ${deviceId}`)
+      
+      logger.info(`Data received: ${JSON.stringify(deviceData)} from device: ${deviceId}`);
       socket.emit('ack', 'Data received');
     } catch (error) {
       logger.error(`Error receiving data: ${error.message}`);
