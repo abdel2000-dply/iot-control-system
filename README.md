@@ -106,7 +106,7 @@ http://localhost:5000/ws-docs
 **Real-Time Updates:**
 
 Devices can connect and send data using WebSockets. The provided `sendFakeData.js` script demonstrates how to simulate sending data from a device using Node.js. You can find this script in the project directory.
-run: ``` node sendFakeData.js ``` in the home directory of the project after adding the device token
+- run: ``` node sendFakeData.js ``` in the home directory of the project after adding the device token
 
 ### Running Tests
 
