@@ -2,7 +2,7 @@ const io = require('socket.io-client');
 
 const serverUrl = 'http://localhost:5000';
 
-const token = '668d3d45bd5bee0dfe2a2eaf.668d3dacbd5bee0dfe2a2eb4';
+const token = '668d3d45bd5bee0dfe2a2eaf.668d3dacbd5bee0dfe2a2eb4'; // Replace with your device token
 
 // Connect to the Socket.IO server
 const socket = io(serverUrl);
