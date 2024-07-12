@@ -139,7 +139,14 @@ class AuthController {
     const userId = req.user.id;
 
     try {
+      const user = await User.findOne({ _id: userId });
+      if (!user) {
+        logger.error(`User not found: ${userId}`);
+        return res.status(400).json({ error: 'User not found' });
+      }
 
+      logger.info(`Get me: ${user.email}`);
+      return res.json({ id: user._id, username: user.username, email: user.email });
     } catch (error) {
       logger.error(`Get me error: ${error.message}`);
       return res.status(500).json({ message: 'Internal server error' });
