@@ -113,4 +113,6 @@ authRoutes.post('/logout', auth, AuthController.Logout);
  */
 authRoutes.post('/refresh-token', AuthController.Refresh);
 
+authRoutes.get('/me', auth, AuthController.getMe);
+
 export default authRoutes;
