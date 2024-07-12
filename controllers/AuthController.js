@@ -132,6 +132,11 @@ class AuthController {
       return res.status(401).json({ error: 'Invalid refresh token' });
     }
   }
+
+  // getMe
+  static async getMe(req, res) {
+    
+  }
 }
 
 export default AuthController;
