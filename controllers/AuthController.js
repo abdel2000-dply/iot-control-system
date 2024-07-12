@@ -129,13 +129,21 @@ class AuthController {
       logger.info(`Token refreshed: ${user.email}`);
       return res.json({ token });
     } catch (error) {
+      logger.error(`Refresh token error: ${error.message}`);
       return res.status(401).json({ error: 'Invalid refresh token' });
     }
   }
 
   // getMe
   static async getMe(req, res) {
-    
+    const userId = req.user.id;
+
+    try {
+
+    } catch (error) {
+      logger.error(`Get me error: ${error.message}`);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
   }
 }
 
