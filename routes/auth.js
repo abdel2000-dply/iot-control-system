@@ -113,6 +113,37 @@ authRoutes.post('/logout', auth, AuthController.Logout);
  */
 authRoutes.post('/refresh-token', AuthController.Refresh);
 
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get current user
+ *     description: This endpoint allows an authenticated user to get their own user information.
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User information retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: The user ID
+ *                 username:
+ *                   type: string
+ *                   description: The username of the user
+ *                 email:
+ *                   type: string
+ *                   description: The email of the user
+ *       400:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 authRoutes.get('/me', auth, AuthController.getMe);
 
 export default authRoutes;
